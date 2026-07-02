@@ -1,3 +1,6 @@
+## Overview
+
+AIReadDoc is a proof-of-concept built with .NET 8 LTS that demonstrates how to integrate Large Language Models (LLMs) into modern ASP.NET applications. The project processes documents asynchronously using a Background Worker, communicates with OpenAI through a Typed HttpClient, and produces AI-powered structured document analysis while following modern .NET architecture and dependency injection best practices.
 # Features
 
 ## Core Architecture
