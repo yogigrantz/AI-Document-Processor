@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Services.Interfaces;
 using System;
@@ -12,12 +13,15 @@ public class Worker1 : BackgroundService
 {
     private readonly IOrchestrator _orchestrator;
     private readonly ILogger<Worker1> _logger;
-    private string _folderName = @"C:\Temp\ProcessResume";
+    private readonly IConfiguration _config;
+    private string _folderName;
 
-    public Worker1(IOrchestrator orchestrator, ILogger<Worker1> logger)
+    public Worker1(IOrchestrator orchestrator, ILogger<Worker1> logger, IConfiguration config)
     {
         this._orchestrator = orchestrator;
         this._logger = logger;
+        this._config = config;
+        _folderName = _config["Input:FolderName"] ?? @"C:\Temp\ProcessResume";
         DirectoryInfo d = new DirectoryInfo(Path.Combine(_folderName, "processed"));
 
         if (!Directory.Exists(d.FullName))

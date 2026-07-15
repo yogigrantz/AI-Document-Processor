@@ -6,17 +6,24 @@ using Services.DIClasses;
 using Services.Interfaces;
 using System;
 using System.Net.Http.Headers;
-using YGLogProvider;
+using YG.LogProvider;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-LogProvider logP = new LogProvider(LogLevel.Information, @"C:\Temp\MyLog", "log.txt", 10, 50000);
-builder.Logging.ClearProviders();  
-builder.Logging.AddProvider(logP);
+var config = builder.Configuration;
+builder.Logging.ClearProviders();
+builder.Logging.AddYGLogProvider(option =>
+{
+    option.BaseDirectory = config["Log:FolderName"]?? "C:\\Temp\\MyLog";
+    option.FolderName = "Log";
+    option.MinimumLevel = LogLevel.Information;
+    option.MaxSize = 50000;
+    option.ExpiryDays = 5;
+});
 builder.Services.AddSingleton<IPdfPigTextExtractor, PdfPigTextExtractor>();
 builder.Services.AddTransient<IConvertPDFToText, ConvertPDFToText>();
 builder.Services.AddHttpClient<IPostToAI, PostToAI>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["OpenAI:BaseUrl"]?? "https://api.openai.com/");
+    client.BaseAddress = new Uri(config["OpenAI:BaseUrl"]?? "https://api.openai.com/");
     client.Timeout = TimeSpan.FromSeconds(60);
 
     client.DefaultRequestHeaders.Authorization =
