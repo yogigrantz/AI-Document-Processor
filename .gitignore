@@ -6,3 +6,5 @@
 /AIReadDoc/obj
 /Services/obj
 /AIReadDoc/appsettings.json
+/AIReadDoc/bin/Debug/net8.0
+/Services/bin/Debug/net8.0
